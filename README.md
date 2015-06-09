@@ -1,6 +1,14 @@
 # Yesod from scratch with Nix on Mac OS X
 
-The easiest way to get started on Mac, is to install Haskell Platform if we have started with Haskell Platform already and want to switch to Nix, start by uninstall Haskell Platform. It's possible to use both Haskell Platform and Nix but that requires a lot of work to make sure you get your PATH right; or all hell will break loose.
+The easiest way to get started on Mac, is to install Haskell Platform.  And that's where most Haskell beginners start with if they are Mac users.
+
+If that's where you are and you would like to switch to using Nix, start by uninstalling Haskell Platform.  A small shell script yet would help you uninstall Haskell Platform cleanly - <a href="https://github.com/hskoans/HaskellUtilities/blob/master/uninstall-haskell-platform.sh">https://github.com/hskoans/HaskellUtilities/blob/master/uninstall-haskell-platform.sh</a>.
+
+It is possible to use both the ghc installed via Haskell Platform and the ghc installed Nix but that requires a lot of work to make sure you get your PATH right; or all hell will break loose.  I have a simple `use_haskell` shell function in my dotfiles that facility switching between Haskell Platform and Nix-installed ghc/cabal tool chain but I do not recommend that you use it.
+
+It's far too easy to get it wrong juggling the PATHs between Haskell Platform binaries and Nix-env installed binaries in your user space.
+
+My recommendation is that you switch to using Nix completely and revel in the power of hermetic builds.
 
 ## Using nixpkgs unstable
 
@@ -10,7 +18,7 @@ git clone git@github.com/NixOS/nixpkgs
 cd ~/.nix-defexpr
 rm -rf channels
 ln -s ~/nixpkgs nixpkgs
-export NIX_PATH=nixpkgs=$HOME/nixpkgs  # place this in .bash_profile or .zprofile to persist it
+export NIX_PATH=nixpkgs=$HOME/nixpkgs:$NIX_PATH  # place this in .bash_profile or .zprofile to persist it
 ```
 
 ## Using binaries instead of compiling every damn thing
