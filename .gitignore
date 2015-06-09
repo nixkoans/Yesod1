@@ -19,3 +19,5 @@ cabal.sandbox.config
 *.hp
 
 *.sqlite3
+yesod-devel/*
+yesod-devel/arargs.txt
