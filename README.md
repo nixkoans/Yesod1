@@ -153,3 +153,71 @@ We can now edit `~/.nixpkgs/config.nix`:
 ```
 
 When we do this, we make it possible to run `nix-env -iA yesod1`.
+
+## What if we want to use a different compiler?
+
+First, we understand that haskell packages are organized on a per-compiler basis.
+
+```
+$ nix-env -qaP -A nixpkgs.haskell.packages.ghc7101
+$ nix-env -qaP -A nixpkgs.haskell.packages.ghc784
+$ nix-env -qaP -A nixpkgs.haskell.packages.ghc763
+```
+
+How did we know what are all available compiler versions?
+
+```
+$ nix-env -qaP -A nixpkgs.haskell.compiler
+nixpkgs.haskell.compiler.ghc704Binary  ghc-7.0.4-binary
+nixpkgs.haskell.compiler.ghc7101       ghc-7.10.1
+nixpkgs.haskell.compiler.ghcHEAD       ghc-7.11.20150607
+nixpkgs.haskell.compiler.ghc742        ghc-7.4.2
+nixpkgs.haskell.compiler.ghc742Binary  ghc-7.4.2-binary
+nixpkgs.haskell.compiler.ghc763        ghc-7.6.3
+nixpkgs.haskell.compiler.ghc784        ghc-7.8.4
+nixpkgs.haskell.compiler.ghcjs         ghcjs-0.1.0
+```
+
+At this time of writing, `nixpkgs.haskellPackages.ghc` is pointing to `nixpkgs.haskell.compiler.ghc7101`, which is why our `cabal2nix` utility picked that up above and created a `shell.nix` that uses `ghc7101`.  We can easily get our `Yesod1` project to switch to using another ghc version by changing that and running `nix-shell` again.
+
+## Switching between different compilers at user-level instead of project-level
+
+What if we want to switch between different compilers at our user nix-env level?
+
+We can do that by imperatively running `nix-env -iA nixpkgs.haskell.packages.ghc784`, or since Nix is a declarative thing, we can stop having to remember and type all these commands and place these declarations in our `$HOME/.nixpkgs/config.nix` file.
+
+For instance, create our `$HOME/.nixpkgs/config.nix` file and write this in it:
+
+```
+{
+  allowUnfree = true;
+  packageOverrides = super: let self = super.pkgs; in
+  {
+    hs7101 =
+      self.haskell.packages.ghc7101.ghcWithPackages
+        (haskellPackages: with haskellPackages; [
+          cabal-install cabal2nix hdevtools
+          /*ghc-mod is broken for 7101 at this moment*/
+        ]);
+    hs784 =
+      self.haskell.packages.ghc784.ghcWithPackages
+        (haskellPackages: with haskellPackages; [
+          cabal-install cabal2nix hdevtools ghc-mod
+        ]);
+  };
+}
+```
+
+With these, we can toggle between the set of tools/compiler we want to use by running either:
+
+```
+nix-env -iA nixpkgs.hs7101
+```
+
+or
+
+```
+nix-env -iA nixpkgs.hs784
+```
+
+Easy peasy.
