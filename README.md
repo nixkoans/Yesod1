@@ -1,10 +1,12 @@
-# Yesod from scratch with Nix on Mac OS X
+# Haskell/Yesod from scratch with Nix on Mac OS X
 
-The easiest way to get started on Mac, is to install Haskell Platform.  And that's where most Haskell beginners start with if they are Mac users.
+The easiest way to get started with Haskell/Yesod on Mac, is to install Haskell Platform - <a href="https://www.haskell.org/platform/mac.html">https://www.haskell.org/platform/mac.html</a>.  And that's where most Haskell beginners start with if they are Mac users.
 
-If that's where you are and you would like to switch to using Nix, start by uninstalling Haskell Platform.  A small shell script yet would help you uninstall Haskell Platform cleanly - <a href="https://github.com/hskoans/HaskellUtilities/blob/master/uninstall-haskell-platform.sh">https://github.com/hskoans/HaskellUtilities/blob/master/uninstall-haskell-platform.sh</a>.
+After a while as one becomes more acquainted with Haskell, it becomes obvious that being tied to a older, fixed binary version (Haskell Platform's toolchain and ghc) is very limiting and prevents us from contributing effectively back to the Haskell/Hackage ecosystem.  This is where Nix excels - it allows us to switch between different Haskell toolchain/ghc, create hermetic builds and leverage on both community-contributed binaries as well as community-contributed source efficiently.  Cabal sandbox does that to a certain extent but depending on source-only compilation shortens our life. :-)  After all, we only have that much time and we don't want to waste our precious time compiling sources *ALL THE TIME*, or do we?
 
-It is possible to use both the ghc installed via Haskell Platform and the ghc installed Nix but that requires a lot of work to make sure you get your PATH right; or all hell will break loose.  I have a simple `use_haskell` shell function in my dotfiles that facilitates switching between Haskell Platform and Nix-installed ghc/cabal tool chain but I do not recommend that you use it.
+If that's where you are and you would like to start leveraging on the benefits of Nix, start by uninstalling Haskell Platform.  A small shell script here would help you uninstall Haskell Platform cleanly - <a href="https://github.com/hskoans/HaskellUtilities/blob/master/uninstall-haskell-platform.sh">https://github.com/hskoans/HaskellUtilities/blob/master/uninstall-haskell-platform.sh</a>.
+
+It is possible to use both the ghc installed via Haskell Platform and the ghc installed via Nix but that requires a lot of work to make sure you get your PATH right; or all hell will break loose.  I have a simple `use_haskell` shell function in my dotfiles that facilitates switching between Haskell Platform and Nix-installed ghc/cabal tool chain but I do not recommend that you use it.
 
 It's far too easy to get it wrong juggling the PATHs between Haskell Platform binaries and Nix-env installed binaries in your user space; and causing all sorts of unexpected build errors as a result.
 
